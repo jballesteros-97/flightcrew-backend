@@ -2,15 +2,22 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const CryptoJS = require('crypto-js');
-const cors = require('cors');
-
 const app = express();
 
-// Middleware
-app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:19000', 'http://localhost:8081'],
-  credentials: true
-}));
+// Configuración CORS
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, eCrewHeader');
+  
+  // Manejar preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  next();
+});
+
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
